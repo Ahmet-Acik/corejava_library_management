@@ -61,7 +61,6 @@ public class LibraryManagementTest {
                 () -> Assertions.assertEquals(1988, library.getBook("The Alchemist").getYear()));
     }
 
-    @DisplayName("")
     @Test
     void testListBooks() {
         // library.listBooks();
