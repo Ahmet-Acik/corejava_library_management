@@ -16,6 +16,11 @@ public class Main {
         library.addBook(new Book("Lord of the Flies", "William Golding", "Allegory", 1954));
         library.addBook(new Book("The Grapes of Wrath", "John Steinbeck", "Novel", 1939));
         library.addBook(new Book("Lord of the Rings", "J.R.R. Tolkien", "Fantasy", 1954));
+        // Add some classic books
+        library.addBook(new Book("Crime and Punishment", "Fyodor Dostoevsky", "Novel", 1866));
+        library.addBook(new Book("Monte Cristo", "Alexandre Dumas", "Adventure", 1844));
+        library.addBook(new Book("War and Peace", "Leo Tolstoy", "Historical novel", 1869));
+        library.addBook(new Book("Mobiy Dick", "Herman Melville", "Adventure", 1851));
 
         // List all books in the library
         System.out.println("Listing all books in the library:");
@@ -30,7 +35,7 @@ public class Main {
 
         // Member borrows a book
         System.out.println("\nJohn Doe borrows '1984':");
-        member.borrowBook(library, "1984");
+        member.borrowBook(library, "1984", true);
 
         // List all books in the library after borrowing
         System.out.println("\nListing all books in the library after borrowing:");
@@ -65,7 +70,7 @@ public class Main {
         // Member tries to borrow a book with inactive account
         System.out.println("\nJohn Doe tries to borrow '1984' with inactive account:");
         member = new Member("John Doe", false);
-        member.borrowBook(library, "1984");
+        member.borrowBook(library, "1984", false);
 
         // List all borrowed books by the member after trying to borrow with inactive
         // account

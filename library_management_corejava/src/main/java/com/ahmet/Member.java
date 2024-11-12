@@ -29,7 +29,7 @@ public class Member implements Borrowable { // Implements interface
 
     // Method to borrow a book from the library check if isAccountActive is true
     @Override
-    public void borrowBook(Library library, String title) {
+    public void borrowBook(Library library, String title, boolean isAccountActive) {
         if (!isAccountActive) {
             System.out.println("Account is not active. Cannot borrow books.");
             return;
