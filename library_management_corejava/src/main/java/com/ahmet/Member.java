@@ -7,12 +7,14 @@ import java.util.Optional;
 // Member class represents a library member
 public class Member implements Borrowable { // Implements interface
     private String name; // Encapsulation: private field
+    private boolean isAccountActive; // Encapsulation: private field
     private List<Book> borrowedBooks; // Encapsulation: private field
 
     // Constructor to initialize a member
-    public Member(String name) {
+    public Member(String name, boolean isAccountActive) {
         this.name = name;
         this.borrowedBooks = new ArrayList<>();
+        this.isAccountActive = isAccountActive;
     }
 
     // Getter for name
@@ -20,9 +22,18 @@ public class Member implements Borrowable { // Implements interface
         return name;
     }
 
-    // Method to borrow a book from the library
+    // Getter for isAccountActive
+    public boolean isAccountActive() {
+        return isAccountActive;
+    }
+
+    // Method to borrow a book from the library check if isAccountActive is true
     @Override
     public void borrowBook(Library library, String title) {
+        if (!isAccountActive) {
+            System.out.println("Account is not active. Cannot borrow books.");
+            return;
+        }
         Optional<Book> bookOpt = library.findBook(title); // Optional to handle null
         if (bookOpt.isPresent() && !bookOpt.get().isBorrowed()) { // Condition
             Book book = bookOpt.get();

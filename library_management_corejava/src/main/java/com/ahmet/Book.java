@@ -4,12 +4,17 @@ public class Book {
     private String title; // Encapsulation: private fields
     private String author; // Encapsulation: private fields
     private boolean isBorrowed; // Encapsulation: private fields
+    private String genre; // Encapsulation: private fields 
+    private int year; // Encapsulation: private fields
+   
 
     // Constructor to initialize a book
-    public Book(String title, String author) {
+    public Book(String title, String author, String genre, int year) {
         this.title = title;
         this.author = author;
         this.isBorrowed = false;
+        this.year = year;
+        this.genre = genre;
     }
 
     // Getter for title
@@ -20,6 +25,16 @@ public class Book {
     // Getter for author
     public String getAuthor() {
         return author;
+    }
+
+    // Getter for genre
+    public String getGenre() {
+        return genre;
+    }
+
+    // Getter for year
+    public int getYear() {
+        return year;
     }
 
     // Getter for isBorrowed

@@ -39,6 +39,46 @@ public class Library {
         return Optional.ofNullable(bookMap.get(title)); // Using Map to find book
     }
 
+    // Method to borrow a book by title
+    public void borrowBook(String title) {
+        findBook(title).ifPresent(Book::borrowBook); // Optional ifPresent method
+    }
+
+    // Method to return a book by title
+    public void returnBook(String title) {
+        findBook(title).ifPresent(Book::returnBook); // Optional ifPresent method
+    }
+
+    // Method to get book by title // Optional
+    public Book getBook(String title) {
+        return findBook(title).orElse(null); // Optional orElse method
+    }  
+
+    // Method to get all books 
+    public Optional<List<Book>> getBooks() {
+        return Optional.ofNullable(books); // Optional ofNullable method 
+    }
+
+    // Method to get all authors
+    public Optional<Set<String>> getAuthors() {
+        return Optional.ofNullable(authors);
+    }
+
+    // Method to get books by author
+    public List<Book> getBooksByAuthor(String author) {
+        return books.stream() // Stream API
+                .filter(book -> book.getAuthor().equals(author)) // Lambda expression
+                .collect(Collectors.toList());
+    }
+
+    // Method to get books by genre
+    public List<Book> getBooksByGenre(String genre) {
+        return books.stream() // Stream API
+                .filter(book -> book.getGenre().equals(genre)) // Lambda expression
+                .collect(Collectors.toList());
+    }
+
+
     // Method to get all available books
     public List<Book> getAvailableBooks() {
         return books.stream() // Stream API
