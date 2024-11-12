@@ -6,15 +6,16 @@ public class Book {
     private boolean isBorrowed; // Encapsulation: private fields
     private String genre; // Encapsulation: private fields 
     private int year; // Encapsulation: private fields
-   
+    private int borrowCount; // Encapsulation: private fields
 
     // Constructor to initialize a book
     public Book(String title, String author, String genre, int year) {
         this.title = title;
         this.author = author;
         this.isBorrowed = false;
-        this.year = year;
         this.genre = genre;
+        this.year = year;
+        this.borrowCount = 0;
     }
 
     // Getter for title
@@ -42,10 +43,16 @@ public class Book {
         return isBorrowed;
     }
 
+    // Getter for borrowCount
+    public int getBorrowCount() {
+        return borrowCount;
+    }
+
     // Method to borrow a book
     public void borrowBook() {
         if (!isBorrowed) { // Condition
             isBorrowed = true;
+            borrowCount++;
         } else {
             System.out.println("Book is already borrowed.");
         }

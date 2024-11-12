@@ -16,11 +16,16 @@ public class Main {
         library.addBook(new Book("Lord of the Flies", "William Golding", "Allegory", 1954));
         library.addBook(new Book("The Grapes of Wrath", "John Steinbeck", "Novel", 1939));
         library.addBook(new Book("Lord of the Rings", "J.R.R. Tolkien", "Fantasy", 1954));
-        // Add some classic books
         library.addBook(new Book("Crime and Punishment", "Fyodor Dostoevsky", "Novel", 1866));
         library.addBook(new Book("Monte Cristo", "Alexandre Dumas", "Adventure", 1844));
         library.addBook(new Book("War and Peace", "Leo Tolstoy", "Historical novel", 1869));
         library.addBook(new Book("Mobiy Dick", "Herman Melville", "Adventure", 1851));
+
+        // Borrow some books
+        // Borrow some books
+        library.borrowBook("To Kill a Mockingbird");
+        library.borrowBook("1984");
+        library.borrowBook("The Great Gatsby");
 
         // List all books in the library
         System.out.println("Listing all books in the library:");
@@ -122,6 +127,51 @@ public class Main {
         library.getAuthors().ifPresent(authors -> authors.forEach(author -> System.out.println("Author: " + author))); // Optional
                                                                                                                        // ifPresent
                                                                                                                        // method
+        // Remove a book from the library
+        System.out.println("Removing '1984' from the library:");
+        library.removeBook("1984");
+        library.listBooks();
+
+        // Update the details of a book
+        System.out.println("\nUpdating 'The Great Gatsby' details:");
+        library.updateBook("The Great Gatsby", new Book("The Great Gatsby", "F. Scott Fitzgerald", "Classic", 1925));
+        library.listBooks();
+
+        // Sort books by title
+        System.out.println("\nBooks sorted by title:");
+        library.sortBooksByTitle().forEach(sortedBook -> System.out.println(sortedBook.getTitle()));
+
+        // Sort books by author
+        System.out.println("\nBooks sorted by author:");
+        library.sortBooksByAuthor().forEach(sortedBook -> System.out.println(sortedBook.getAuthor()));
+
+        // Count the number of books by a specific author
+        System.out.println(
+                "\nNumber of books by 'F. Scott Fitzgerald': " + library.countBooksByAuthor("F. Scott Fitzgerald"));
+
+        // Count the number of books by genre
+        System.out.println("Number of books in 'Fiction' genre: " + library.countBooksByGenre("Fiction"));
+
+        // Check if a book exists in the library
+        System.out.println("\nChecking if '1984' exists in the library: " + library.bookExists("1984"));
+
+        // Get the most borrowed book
+        System.out.println("\nMost borrowed book:");
+        Book mostBorrowedBook = library.getMostBorrowedBook();
+        if (mostBorrowedBook != null) {
+            System.out.println(mostBorrowedBook.getTitle());
+        } else {
+            System.out.println("No books have been borrowed yet.");
+        }
+
+        // Get the least borrowed book
+        System.out.println("\nLeast borrowed book:");
+        Book leastBorrowedBook = library.getLeastBorrowedBook();
+        if (leastBorrowedBook != null) {
+            System.out.println(leastBorrowedBook.getTitle());
+        } else {
+            System.out.println("No books have been borrowed yet.");
+        }
 
     }
 
