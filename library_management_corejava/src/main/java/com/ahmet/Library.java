@@ -161,4 +161,11 @@ public class Library {
                 .min(Comparator.comparingInt(Book::getBorrowCount))
                 .orElse(null);
     }
+
+    // Method to remove all books from the library
+    public void clearLibrary() {
+        books.clear();
+        authors.clear();
+        bookMap.clear();
+    }
 }
