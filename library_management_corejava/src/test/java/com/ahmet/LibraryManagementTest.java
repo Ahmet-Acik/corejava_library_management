@@ -60,12 +60,14 @@ public class LibraryManagementTest {
                 () -> Assertions.assertEquals(1988, library.getBook("The Alchemist").getYear()));
     }
 
+    @DisplayName("Test List Books")
     @Test
     void testListBooks() {
         int numberOfBooks = library.getBooks().get().size();
         assertEquals(14, numberOfBooks);
     }
 
+    @DisplayName("Test Find Book")
     @Test
     void testFindBook() {
         Optional<Book> book = library.findBook("1984");
@@ -73,12 +75,14 @@ public class LibraryManagementTest {
         assertEquals("1984", book.get().getTitle());
     }
 
+    @DisplayName("Test Borrow Book By Title")
     @Test
     void testBorrowBook() {
         library.borrowBook("1984", member);
         assertTrue(library.getBookCopies("1984").stream().anyMatch(BookCopy::isBorrowed));
     }
 
+    @DisplayName("Test Return Book By Title")
     @Test
     void testReturnBook() {
         library.borrowBook("1984", member);
@@ -86,6 +90,7 @@ public class LibraryManagementTest {
         assertFalse(library.getBookCopies("1984").stream().anyMatch(BookCopy::isBorrowed));
     }
 
+    @DisplayName("Test Get Book By Title")
     @Test
     void testGetBook() {
         Book book = library.getBook("1984");
@@ -93,6 +98,7 @@ public class LibraryManagementTest {
         assertEquals("1984", book.getTitle());
     }
 
+    @DisplayName("Test Get Books")
     @Test
     void testGetBooks() {
         Optional<List<Book>> books = library.getBooks();
@@ -100,6 +106,7 @@ public class LibraryManagementTest {
         assertEquals(14, books.get().size());
     }
 
+    @DisplayName("Test Get Authors Set")
     @Test
     void testGetAuthors() {
         Optional<Set<String>> authors = library.getAuthors();
@@ -107,18 +114,21 @@ public class LibraryManagementTest {
         assertEquals(13, authors.get().size());
     }
 
+    @DisplayName("Test Get Books By Author")
     @Test
     void testGetBooksByAuthor() {
         List<Book> books = library.getBooksByAuthor("George Orwell");
         assertEquals(2, books.size());
     }
 
+    @DisplayName("Test Get Books By Genre")
     @Test
     void testGetBooksByGenre() {
         List<Book> books = library.getBooksByGenre("Adventure");
         assertEquals(2, books.size());
     }
 
+    @DisplayName("Test Get Available Books")
     @Test
     void testGetAvailableBooks() {
         library.borrowBook("1984", member);
@@ -126,6 +136,7 @@ public class LibraryManagementTest {
         assertEquals(32, copies.size());
     }
 
+    @DisplayName("Test Get Borrowed Book")
     @Test
     void testGetBorrowedBooks() {
         library.borrowBook("1984", member);
@@ -134,6 +145,7 @@ public class LibraryManagementTest {
         assertEquals("1984", copies.get(0).getBook().getTitle());
     }
 
+    @DisplayName("Test Author Exists")
     @Test
     void testListAuthors() {
         library.listAuthors();
@@ -141,12 +153,14 @@ public class LibraryManagementTest {
         assertEquals(13, numberOfAuthors);
     }
 
+    @DisplayName("Test Remove Book")
     @Test
     void testRemoveBook() {
         library.removeBook("1984");
         assertNull(library.getBook("1984"));
     }
 
+    @DisplayName("Test Update Book")
     @Test
     void testUpdateBook() {
         Book newBook = new Book("1984", "George Orwell", "Science Fiction", 1949);
@@ -154,6 +168,7 @@ public class LibraryManagementTest {
         assertEquals("Science Fiction", library.getBook("1984").getGenre());
     }
 
+    @DisplayName("Test Sort Books By Title")
     @Test
     void testSortBooksByTitle() {
         List<Book> sortedBooks = library.sortBooksByTitle();
@@ -162,6 +177,7 @@ public class LibraryManagementTest {
         assertEquals("Brave New World", sortedBooks.get(2).getTitle());
     }
 
+    @DisplayName("Test Sort Books By Author")
     @Test
     void testSortBooksByAuthor() {
         List<Book> sortedBooks = library.sortBooksByAuthor();
@@ -170,24 +186,28 @@ public class LibraryManagementTest {
         assertEquals("F. Scott Fitzgerald", sortedBooks.get(2).getAuthor());
     }
 
+    @DisplayName("Test Count Books By Author")
     @Test
     void testCountBooksByAuthor() {
         long count = library.countBooksByAuthor("George Orwell");
         assertEquals(2, count);
     }
 
+    @DisplayName("Test Count Books By Genre")
     @Test
     void testCountBooksByGenre() {
         long count = library.countBooksByGenre("Adventure");
         assertEquals(2, count);
     }
 
+    @DisplayName("Test Book Exists and Does Not Exist")
     @Test
     void testBookExists() {
         assertTrue(library.bookExists("1984"));
         assertFalse(library.bookExists("Nonexistent Book"));
     }
 
+    @DisplayName("Test Get Most Borrowed Book")
     @Test
     void testGetMostBorrowedBook() {
         library.borrowBook("1984", member);
@@ -197,6 +217,7 @@ public class LibraryManagementTest {
         assertEquals("The Great Gatsby", mostBorrowedBook.getTitle());
     }
 
+    @DisplayName("Test Get Least Borrowed Book")
     @Test
     void testGetLeastBorrowedBook() {
         library.borrowBook("1984", member);
