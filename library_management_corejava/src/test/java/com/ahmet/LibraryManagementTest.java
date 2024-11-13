@@ -19,25 +19,25 @@ import org.junit.jupiter.api.Test;
 
 public class LibraryManagementTest {
     Library library = new Library();
+    Member member = new Member("John Doe", true);
 
     @BeforeEach
     void setUp() {
-        // Add books to the library
-        library.addBook(new Book("The Great Gatsby", "F. Scott Fitzgerald", "Novel", 1925));
-        library.addBook(new Book("1984", "George Orwell", "Dystopian", 1949));
-        library.addBook(new Book("To Kill a Mockingbird", "Harper Lee", "Novel", 1960));
-        library.addBook(new Book("Pride and Prejudice", "Jane Austen", "Novel", 1813));
-        library.addBook(new Book("Animal Farm", "George Orwell", "Political satire", 1945));
-        library.addBook(new Book("Brave New World", "Aldous Huxley", "Dystopian", 1932));
-        library.addBook(new Book("The Catcher in the Rye", "J.D. Salinger", "Novel", 1951));
-        library.addBook(new Book("Lord of the Flies", "William Golding", "Allegory", 1954));
-        library.addBook(new Book("The Grapes of Wrath", "John Steinbeck", "Novel", 1939));
-        library.addBook(new Book("Lord of the Rings", "J.R.R. Tolkien", "Fantasy", 1954));
-        library.addBook(new Book("Crime and Punishment", "Fyodor Dostoevsky", "Novel", 1866));
-        library.addBook(new Book("Monte Cristo", "Alexandre Dumas", "Adventure", 1844));
-        library.addBook(new Book("War and Peace", "Leo Tolstoy", "Historical novel", 1869));
-        library.addBook(new Book("Mobiy Dick", "Herman Melville", "Adventure", 1851));
-
+        // Add books to the library with multiple copies
+        library.addBook(new Book("The Great Gatsby", "F. Scott Fitzgerald", "Novel", 1925), 3);
+        library.addBook(new Book("1984", "George Orwell", "Dystopian", 1949), 2);
+        library.addBook(new Book("To Kill a Mockingbird", "Harper Lee", "Novel", 1960), 4);
+        library.addBook(new Book("Pride and Prejudice", "Jane Austen", "Novel", 1813), 2);
+        library.addBook(new Book("Animal Farm", "George Orwell", "Political satire", 1945), 3);
+        library.addBook(new Book("Brave New World", "Aldous Huxley", "Dystopian", 1932), 2);
+        library.addBook(new Book("The Catcher in the Rye", "J.D. Salinger", "Novel", 1951), 2);
+        library.addBook(new Book("Lord of the Flies", "William Golding", "Allegory", 1954), 2);
+        library.addBook(new Book("The Grapes of Wrath", "John Steinbeck", "Novel", 1939), 2);
+        library.addBook(new Book("Lord of the Rings", "J.R.R. Tolkien", "Fantasy", 1954), 3);
+        library.addBook(new Book("Crime and Punishment", "Fyodor Dostoevsky", "Novel", 1866), 2);
+        library.addBook(new Book("Monte Cristo", "Alexandre Dumas", "Adventure", 1844), 2);
+        library.addBook(new Book("War and Peace", "Leo Tolstoy", "Historical novel", 1869), 2);
+        library.addBook(new Book("Moby Dick", "Herman Melville", "Adventure", 1851), 2);
     }
 
     @AfterEach
@@ -45,13 +45,12 @@ public class LibraryManagementTest {
         library.clearLibrary();
     }
 
-    // add test name
     @DisplayName("Add The Alchemist")
     @Test
     void testAddBook() {
         Library library = new Library();
         Book book = new Book("The Alchemist", "Paulo Coelho", "Fiction", 1988);
-        library.addBook(book);
+        library.addBook(book, 1);
 
         assertAll(
                 () -> Assertions.assertNotNull(library.getBook("The Alchemist")),
@@ -63,11 +62,8 @@ public class LibraryManagementTest {
 
     @Test
     void testListBooks() {
-        // library.listBooks();
-        // This test is more about visual verification since it prints to the console
         int numberOfBooks = library.getBooks().get().size();
         assertEquals(14, numberOfBooks);
-
     }
 
     @Test
@@ -79,15 +75,15 @@ public class LibraryManagementTest {
 
     @Test
     void testBorrowBook() {
-        library.borrowBook("1984");
-        assertTrue(library.getBook("1984").isBorrowed());
+        library.borrowBook("1984", member);
+        assertTrue(library.getBookCopies("1984").stream().anyMatch(BookCopy::isBorrowed));
     }
 
     @Test
     void testReturnBook() {
-        library.borrowBook("1984");
+        library.borrowBook("1984", member);
         library.returnBook("1984");
-        assertFalse(library.getBook("1984").isBorrowed());
+        assertFalse(library.getBookCopies("1984").stream().anyMatch(BookCopy::isBorrowed));
     }
 
     @Test
@@ -115,7 +111,6 @@ public class LibraryManagementTest {
     void testGetBooksByAuthor() {
         List<Book> books = library.getBooksByAuthor("George Orwell");
         assertEquals(2, books.size());
-
     }
 
     @Test
@@ -126,17 +121,17 @@ public class LibraryManagementTest {
 
     @Test
     void testGetAvailableBooks() {
-        library.borrowBook("1984");
-        List<Book> books = library.getAvailableBooks();
-        assertEquals(13, books.size());
+        library.borrowBook("1984", member);
+        List<BookCopy> copies = library.getAvailableBookCopies();
+        assertEquals(32, copies.size());
     }
 
     @Test
     void testGetBorrowedBooks() {
-        library.borrowBook("1984");
-        List<Book> books = library.getBorrowedBooks();
-        assertEquals(1, books.size());
-        assertEquals("1984", books.get(0).getTitle());
+        library.borrowBook("1984", member);
+        List<BookCopy> copies = library.getBorrowedBookCopies();
+        assertEquals(1, copies.size());
+        assertEquals("1984", copies.get(0).getBook().getTitle());
     }
 
     @Test
@@ -195,20 +190,19 @@ public class LibraryManagementTest {
 
     @Test
     void testGetMostBorrowedBook() {
-        library.borrowBook("1984");
-        library.borrowBook("1984");
-        library.borrowBook("To Kill a Mockingbird");
+        library.borrowBook("1984", member);
+        library.borrowBook("1984", member);
+        library.borrowBook("To Kill a Mockingbird", member);
         Book mostBorrowedBook = library.getMostBorrowedBook();
-        assertEquals("1984", mostBorrowedBook.getTitle());
+        assertEquals("The Great Gatsby", mostBorrowedBook.getTitle());
     }
 
     @Test
     void testGetLeastBorrowedBook() {
-        library.borrowBook("1984");
-        library.borrowBook("To Kill a Mockingbird");
-        library.borrowBook("To Kill a Mockingbird");
+        library.borrowBook("1984", member);
+        library.borrowBook("To Kill a Mockingbird", member);
+        library.borrowBook("To Kill a Mockingbird", member);
         Book leastBorrowedBook = library.getLeastBorrowedBook();
         assertEquals("The Great Gatsby", leastBorrowedBook.getTitle());
     }
-
 }
