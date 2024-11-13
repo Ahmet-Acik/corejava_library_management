@@ -1,13 +1,6 @@
 package com.ahmet;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 // Library class represents a collection of books
@@ -15,26 +8,89 @@ public class Library {
     private List<Book> books; // Encapsulation: private field List to store books
     private Set<String> authors; // Set to store unique authors
     private Map<String, Book> bookMap; // Map to store books by title
+    private Map<String, List<BookCopy>> bookCopiesMap; // Map to store book copies by title
 
     // Constructor to initialize the library
     public Library() {
         books = new ArrayList<>();
         authors = new HashSet<>();
         bookMap = new HashMap<>();
+        bookCopiesMap = new HashMap<>();
     }
 
-    // Method to add a book to the library
-    public void addBook(Book book) {
-        books.add(book);
-        authors.add(book.getAuthor());
-        bookMap.put(book.getTitle(), book);
+    // Method to add a book to the library with multiple copies
+    public void addBook(Book book, int numberOfCopies) {
+        bookCopiesMap.putIfAbsent(book.getTitle(), new ArrayList<>());
+        List<BookCopy> copies = bookCopiesMap.get(book.getTitle());
+        for (int i = 0; i < numberOfCopies; i++) {
+            copies.add(new BookCopy(book));
+        }
+        if (!bookMap.containsKey(book.getTitle())) {
+            books.add(book);
+            authors.add(book.getAuthor());
+            bookMap.put(book.getTitle(), book);
+        }
     }
 
     // Method to list all books in the library
     public void listBooks() {
-        books.forEach(book -> System.out.println(
-                "Title: " + book.getTitle() + ", Author: " + book.getAuthor() + ", Borrowed: " + book.isBorrowed())); // Lambda
-                                                                                                                      // expression
+        bookCopiesMap.values().stream()
+            .flatMap(List::stream)
+            .forEach(copy -> System.out.println(
+                "Title: " + copy.getBook().getTitle() + ", Author: " + copy.getBook().getAuthor() + 
+                ", Borrowed: " + copy.isBorrowed() + ", Borrow Count: " + copy.getBorrowCount()));
+    }
+
+    // Method to find an available book copy by title
+    public Optional<BookCopy> findAvailableBookCopy(String title) {
+        return bookCopiesMap.getOrDefault(title, Collections.emptyList()).stream()
+            .filter(copy -> !copy.isBorrowed())
+            .findFirst();
+    }
+
+    // Method to borrow a book by title
+    public void borrowBook(String title, Member member) {
+        if (!member.isAccountActive()) {
+            System.out.println("Member account is not active. Cannot borrow books.");
+            return;
+        }
+        findAvailableBookCopy(title).ifPresent(BookCopy::borrowBook);
+    }
+
+    // Method to return a book by title
+    public void returnBook(String title) {
+        bookCopiesMap.getOrDefault(title, Collections.emptyList()).stream()
+            .filter(BookCopy::isBorrowed)
+            .findFirst()
+            .ifPresent(BookCopy::returnBook);
+    }
+
+    // Method to get book copies by title
+    public List<BookCopy> getBookCopies(String title) {
+        return bookCopiesMap.getOrDefault(title, Collections.emptyList());
+    }
+
+    // Method to get all book copies
+    public List<BookCopy> getAllBookCopies() {
+        return bookCopiesMap.values().stream()
+            .flatMap(List::stream)
+            .collect(Collectors.toList());
+    }
+
+    // Method to get all available book copies
+    public List<BookCopy> getAvailableBookCopies() {
+        return bookCopiesMap.values().stream()
+            .flatMap(List::stream)
+            .filter(copy -> !copy.isBorrowed())
+            .collect(Collectors.toList());
+    }
+
+    // Method to get all borrowed book copies
+    public List<BookCopy> getBorrowedBookCopies() {
+        return bookCopiesMap.values().stream()
+            .flatMap(List::stream)
+            .filter(BookCopy::isBorrowed)
+            .collect(Collectors.toList());
     }
 
     // Method to find a book by title
@@ -42,17 +98,7 @@ public class Library {
         return Optional.ofNullable(bookMap.get(title)); // Using Map to find book
     }
 
-    // Method to borrow a book by title
-    public void borrowBook(String title) {
-        findBook(title).ifPresent(Book::borrowBook); // Optional ifPresent method
-    }
-
-    // Method to return a book by title
-    public void returnBook(String title) {
-        findBook(title).ifPresent(Book::returnBook); // Optional ifPresent method
-    }
-
-    // Method to get book by title // Optional
+    // Method to get book by title
     public Book getBook(String title) {
         return findBook(title).orElse(null); // Optional orElse method
     }
@@ -106,13 +152,14 @@ public class Library {
         if (book != null) {
             books.remove(book);
             authors.remove(book.getAuthor());
+            bookCopiesMap.remove(title);
         }
     }
 
     // Method to update the details of a book
     public void updateBook(String oldTitle, Book newBook) {
         removeBook(oldTitle);
-        addBook(newBook);
+        addBook(newBook, 1); // Assuming updating a book adds one copy
     }
 
     // Method to sort books by title
@@ -167,5 +214,6 @@ public class Library {
         books.clear();
         authors.clear();
         bookMap.clear();
+        bookCopiesMap.clear();
     }
 }
