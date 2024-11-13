@@ -176,6 +176,6 @@ This project is licensed under the MIT License.
 
 ## Acknowledgements
 
-This project was inspired by various online resources and tutorials on Java programming and library management systems.
+This project was inspired by various resources on Java programming and library management systems.
 ```
 
