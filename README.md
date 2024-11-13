@@ -37,7 +37,7 @@ The system is designed to manage a collection of books with support for multiple
 To clone the repository, use the following command:
 
 ```sh
-git clone https://github.com/yourusername/library-management-system.git
+git clone https://github.com/Ahmet-Acik/corejava_library_management.git
 ```
 
 ## Installing Dependencies
